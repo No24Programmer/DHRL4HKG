@@ -9,9 +9,9 @@ from tqdm import tqdm
 
 from HyperGraph.entity.HDataset import HDataset
 from HyperGraph.entity.hfact_example import NaryExample
-from HyperGraph.entity.hfact_teature import NaryFeature
-from utils.file_rw import write_data_to_json
-from utils.test_args import get_max_node
+from HyperGraph.entity.hfact_feature import NaryFeature
+# from utils.file_rw import write_data_to_json
+from utils.train_args import get_max_node
 
 
 def read_examples(input_file, dataset=None, args=None):
@@ -95,7 +95,7 @@ def convert_examples_to_hypergraph(examples, vocabulary, max_node_num, max_hyper
         orig_input_mask.extend(rht_mask)
         orig_type_label = [-1, 1, 1]  # relation/key = -1; entity/value = 1
         hyp_type_index = [-1, -1, -1]  # main triple = -1;
-        node_type_label = [1, 2, 2]    # relation-1, head/tail entity-2, auxiliary relation-3, auxiliary entity-4, other-0
+        node_type_label = [1, 2, 3]  # relation-1, head entity-2, tail entity-3, auxiliary relation-4, auxiliary entity-5, other-0
 
         node_id = 3
         if example.auxiliary_info is not None:
@@ -111,7 +111,7 @@ def convert_examples_to_hypergraph(examples, vocabulary, max_node_num, max_hyper
                 orig_input_mask.append(1)
                 orig_type_label.append(-1)
                 hyp_type_index.append(index)
-                node_type_label.append(3)
+                node_type_label.append(4)
 
                 for value in example.auxiliary_info[attribute]:
                     hyperedge[node_id] = 1  # value
@@ -120,7 +120,7 @@ def convert_examples_to_hypergraph(examples, vocabulary, max_node_num, max_hyper
                     orig_input_mask.append(1)
                     orig_type_label.append(1)
                     hyp_type_index.append(index)
-                    node_type_label.append(4)
+                    node_type_label.append(5)
 
                 incidence_matrix_T.append(hyperedge)  # a hyperedge
 
